@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2877232114122667759}
   - component: {fileID: 3152485881432730162}
   - component: {fileID: 6553107547750587186}
+  - component: {fileID: 5265640140373973565}
   m_Layer: 0
   m_Name: Coin
   m_TagString: Pickups
@@ -255,3 +256,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5265640140373973565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2877232114122667747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce54f623b830e894f83e4ffae199d3dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coinValue: 1
