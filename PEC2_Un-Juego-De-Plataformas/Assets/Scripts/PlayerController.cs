@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public Transform groundTransform;
     private float movement = 0.0f;
     private bool grounded = true;
+    public float jumpForce = 20.0f;
 
     private new Rigidbody2D rigidbody;
     private Animator animator;
@@ -38,7 +39,8 @@ public class PlayerController : MonoBehaviour
         if(Input.GetButtonDown("Jump") && grounded)
         {
             // Jump
-            rigidbody.AddForce(new Vector2(0.0f, 200.0f));
+            // rigidbody.AddForce(new Vector2(0.0f, 400.0f));
+            rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
 
         if(movement > 0.01f && !playerIsFacingRight)
