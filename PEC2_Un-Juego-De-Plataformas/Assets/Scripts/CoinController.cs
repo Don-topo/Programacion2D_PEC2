@@ -28,7 +28,7 @@ public class CoinController : MonoBehaviour
             {
                 bc.enabled = false;
             }
-            GameManager.PickUpCoin(coinValue);
+            GameManager.Instance.PickUpCoin(coinValue);
             Destroy(gameObject, audioSource.clip.length);           
         }
     }

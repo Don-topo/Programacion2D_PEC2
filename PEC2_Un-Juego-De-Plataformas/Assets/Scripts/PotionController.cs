@@ -26,7 +26,7 @@ public class PotionController : MonoBehaviour
             {
                 bc.enabled = false;
             }
-            GameManager.PickUpPotion();
+            GameManager.Instance.PickUpPotion();
             Destroy(gameObject, audioSource.clip.length);
         }
     }

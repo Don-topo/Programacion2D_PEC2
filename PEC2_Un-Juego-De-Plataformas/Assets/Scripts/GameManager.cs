@@ -1,20 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-  
-    private static int coinsCollected = 0;
-    private static int currentPlayerHealth = 1;
-    private static int maxPlayerHealth = 3;
-    private static int rubiesCollected = 0;
+
+    public GameObject collectibles;
+    public TextMeshProUGUI coinsText;
+    public TextMeshProUGUI rubiesText;
+    public GameObject[] health;
+
+    private int coinsCollected = 0;
+    private int currentPlayerHealth = 1;
+    private int maxPlayerHealth = 4;
+    private int rubiesCollected = 0;
+    private static GameManager gmInstance;
+
+    public static GameManager Instance { get { return gmInstance; } }
     
 
     // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        
+        if (gmInstance != null && gmInstance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            gmInstance = this;
+        }
     }
 
     // Update is called once per frame
@@ -23,22 +39,40 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public static void PickUpCoin(int coinValue)
+    public void PickUpCoin(int coinValue)
     {
         coinsCollected += coinValue;
-        // TODO Update and show coin counter
+        coinsText.SetText(coinsCollected.ToString());
+        var animatorState = collectibles.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
+        if (animatorState.IsName("HideCollectibles") && animatorState.normalizedTime >= 1.0f)
+        {
+            collectibles.GetComponent<Animator>().SetTrigger("Show");
+        }
     }
 
-    public static void PickUpPotion()
+    public void PickUpPotion()
     {
         currentPlayerHealth = maxPlayerHealth;
-        // TODO Update health bar
+        UpdateHealthUI();
     }
 
-    public static void PickUpRuby(int rubyValue)
+    public void PickUpRuby(int rubyValue)
     {
         rubiesCollected += rubyValue;
-        // TODO Update and show coin counter
+        rubiesText.SetText(rubiesCollected.ToString());
+        var animatorState = collectibles.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
+        if (animatorState.IsName("HideCollectibles") && animatorState.normalizedTime >= 1.0f)
+        {
+            collectibles.GetComponent<Animator>().SetTrigger("Show");
+        }        
+    }
+
+    private void UpdateHealthUI()
+    {
+        for(int i = 0; i < currentPlayerHealth; i++)
+        {
+
+        }
     }
 
   

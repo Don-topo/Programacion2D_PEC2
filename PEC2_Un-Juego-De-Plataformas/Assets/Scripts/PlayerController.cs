@@ -7,10 +7,10 @@ public class PlayerController : MonoBehaviour
 
     public float movementSpeed = 20.0f;
     public Transform groundTransform;
-    private float movement = 0.0f;
-    private bool grounded = true;
     public float jumpForce = 20.0f;
 
+    private float movement = 0.0f;
+    private bool grounded = true;
     private new Rigidbody2D rigidbody;
     private Animator animator;
     private bool playerIsFacingRight = true;
@@ -18,8 +18,7 @@ public class PlayerController : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
-        
+    {       
     }
 
     private void Awake()

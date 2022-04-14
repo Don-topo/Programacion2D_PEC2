@@ -10,7 +10,7 @@ public class RubyController : MonoBehaviour
     private AudioSource audioSource;
     private Animator animator;
 
-    private void Awake()
+    void Awake()
     {
         sprite = GetComponent<SpriteRenderer>();
         colliders = GetComponents<BoxCollider2D>();
@@ -29,7 +29,8 @@ public class RubyController : MonoBehaviour
             {
                 bc.enabled = false;
             }
-            GameManager.PickUpRuby(rubyValue);
+            //gameManager.PickUpRuby(rubyValue);
+            GameManager.Instance.PickUpRuby(rubyValue);
             Destroy(gameObject, audioSource.clip.length);
         }
     }
