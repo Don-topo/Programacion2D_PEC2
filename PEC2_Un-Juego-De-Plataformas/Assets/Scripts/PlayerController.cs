@@ -8,13 +8,15 @@ public class PlayerController : MonoBehaviour
     public float movementSpeed = 20.0f;
     public Transform groundTransform;
     public float jumpForce = 20.0f;
+    [SerializeField]
+    LayerMask floorMask;
 
     private float movement = 0.0f;
     private bool grounded = true;
     private new Rigidbody2D rigidbody;
     private Animator animator;
     private bool playerIsFacingRight = true;
-    private bool interactWithChest = false;
+    //private bool interactWithChest = false;
 
     // Start is called before the first frame update
     void Start()
@@ -38,7 +40,6 @@ public class PlayerController : MonoBehaviour
         if(Input.GetButtonDown("Jump") && grounded)
         {
             // Jump
-            // rigidbody.AddForce(new Vector2(0.0f, 400.0f));
             rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
 
@@ -96,22 +97,18 @@ public class PlayerController : MonoBehaviour
 
     private void CheckGrounded()
     {
-        RaycastHit2D hit = Physics2D.Raycast(groundTransform.position, Vector2.down);
-        float distance = Mathf.Abs(groundTransform.position.y - hit.point.y);
+        RaycastHit2D hit = Physics2D.Raycast(groundTransform.position, Vector2.down, 0.25f, floorMask);
 
-        if (hit.collider != null)
+        if (hit == true)
         {
-            if (distance == 0f && hit.collider.gameObject.CompareTag("Floor"))
-            {
-                grounded = true;
-                animator.SetBool("Jumping", false);
-            }
-            else
-            {
-                grounded = false;
-                animator.SetBool("Jumping", true);
-            }
-        }              
+            grounded = true;
+            animator.SetBool("Jumping", false);
+        }
+        else
+        {
+            grounded = false;
+            animator.SetBool("Jumping", true);
+        }
     }
 
 

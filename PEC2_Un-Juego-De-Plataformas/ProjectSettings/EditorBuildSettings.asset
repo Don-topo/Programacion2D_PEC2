@@ -12,6 +12,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Forest.unity
     guid: 21654f488a0de0342a01b0cb3eacb8cb
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/Castle.unity
+    guid: 2c61be50175b5a245bb2bf124bf34285
+  - enabled: 1
+    path: Assets/Scenes/BossRoom.unity
+    guid: c1e9149ccfdc5d546a64d47316b70bb4
+  - enabled: 1
+    path: Assets/Scenes/EndGame.unity
+    guid: ead33957d0c13c94badb941a45fe6671
   m_configObjects: {}
