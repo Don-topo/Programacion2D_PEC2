@@ -8,6 +8,8 @@ TagManager:
   - Floor
   - Enemy
   - UI
+  - Box
+  - Chest
   layers:
   - Default
   - TransparentFX
@@ -16,9 +18,9 @@ TagManager:
   - Water
   - UI
   - Floor
+  - 
+  - Hit
   - background
-  - 
-  - 
   - 
   - 
   - 

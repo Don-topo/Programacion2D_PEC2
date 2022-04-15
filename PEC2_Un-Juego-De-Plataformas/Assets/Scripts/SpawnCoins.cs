@@ -28,7 +28,9 @@ public class SpawnCoins : MonoBehaviour
         {
             // TODO Play spawn sound
             GameObject coin = Instantiate(coinPrefab, transform);
-            Vector2 force = new Vector2(3f, 4f);
+            var xForce = Random.Range(5f, 7f);
+            var yForce = Random.Range(5f, 7f);
+            Vector2 force = new Vector2(xForce, yForce);
             coin.GetComponent<Rigidbody2D>().AddRelativeForce(force);
         }
     }

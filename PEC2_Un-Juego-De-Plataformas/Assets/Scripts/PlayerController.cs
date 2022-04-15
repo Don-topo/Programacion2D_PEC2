@@ -8,15 +8,20 @@ public class PlayerController : MonoBehaviour
     public float movementSpeed = 20.0f;
     public Transform groundTransform;
     public float jumpForce = 20.0f;
+    public Transform attackZone;
+    public float attackRange = 5.0f;
+    [SerializeField]
+    public LayerMask attackLayer;
     [SerializeField]
     LayerMask floorMask;
+    public float attackVelocity = 2f;
 
     private float movement = 0.0f;
     private bool grounded = true;
     private new Rigidbody2D rigidbody;
     private Animator animator;
     private bool playerIsFacingRight = true;
-    //private bool interactWithChest = false;
+    private float nextAttackTime = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -53,19 +58,27 @@ public class PlayerController : MonoBehaviour
         }
 
         CheckMovement();
-
-        if (Input.GetMouseButtonDown(0) && grounded)
-        {
-            // Attack
-            animator.SetTrigger("Attack");
-        }
-
+        
         if(Input.GetMouseButtonDown(1) && grounded)
         {
             // Roll
             animator.SetTrigger("Dash");
-        }
             // add facing dash movement
+        }
+
+        if(Time.time >= nextAttackTime)
+        {
+            if (Input.GetMouseButtonDown(0) && grounded)
+            {
+                Attack();
+                nextAttackTime = Time.time + 1f / attackRange;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Interact();
+        }
 
 
     }
@@ -73,6 +86,42 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         CheckGrounded();
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if(attackZone == null)
+        {
+            return;
+        }
+        Gizmos.DrawWireSphere(attackZone.position, attackRange);
+    }
+
+    private void Attack()
+    {
+        animator.SetTrigger("Attack");
+        Collider2D[] hitObjects = Physics2D.OverlapCircleAll(attackZone.position, attackRange, attackLayer);
+        foreach (Collider2D cl in hitObjects)
+        {
+            switch (cl.gameObject.tag)
+            {
+                case "Box":
+                    cl.GetComponent<BoxController>().PlayerInteract();
+                    break;
+            }
+        }
+    }
+
+    private void Interact()
+    {
+        Collider2D[] hitObjects = Physics2D.OverlapCircleAll(attackZone.position, attackRange, attackLayer);
+        foreach (Collider2D cl in hitObjects)
+        {
+            if (cl.gameObject.CompareTag("Chest"))
+            {
+                cl.GetComponent<SpawnCoins>().Spawn();
+            }
+        }
     }
 
     private void FlipPlayer()
