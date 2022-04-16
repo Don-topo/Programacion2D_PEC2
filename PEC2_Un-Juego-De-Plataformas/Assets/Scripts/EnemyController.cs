@@ -10,8 +10,10 @@ public class EnemyController : MonoBehaviour
     private Animator animator;
     private Collider2D[] colliders2D;
     private AudioSource audioSource;
-    private new Rigidbody2D rigidbody2D;
+    protected new Rigidbody2D rigidbody2D;
     protected bool enemyIsFacingRight = true;
+    protected float movement = 0;
+    protected bool canMove = true;
     public Transform attackZone;
     public float attackRange = 5.0f;
     public float playerRange = 20f;
@@ -30,12 +32,17 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Move();
+        if(healtPoints > 0)
+        {
+            Move();
+        }        
     }
 
     public void GetHit(int damage)
     {
-        animator.SetTrigger("Hit");        
+        animator.SetTrigger("Hit");
+        canMove = false;
+        StartCoroutine(WaitHit());
         healtPoints -= damage;
         if(healtPoints <= 0)
         {
@@ -93,5 +100,10 @@ public class EnemyController : MonoBehaviour
         transform.localScale = theScale;
     }
 
+    IEnumerator WaitHit()
+    {
+        canMove = true;
+        yield return new WaitForSeconds(1f);
+    } 
 
 }
