@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     LayerMask floorMask;
     public float attackVelocity = 2f;
+    public float hitForce = 15.0f;
+
 
     private float movement = 0.0f;
     private bool grounded = true;
@@ -22,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private bool playerIsFacingRight = true;
     private float nextAttackTime = 0f;
+    private float moveTime = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -31,7 +34,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         rigidbody = gameObject.GetComponent<Rigidbody2D>();
-        animator = gameObject.GetComponent<Animator>();
+        animator = gameObject.GetComponent<Animator>();      
     }
 
     // Update is called once per frame
@@ -108,6 +111,9 @@ public class PlayerController : MonoBehaviour
                 case "Box":
                     cl.GetComponent<BoxController>().PlayerInteract();
                     break;
+                case "Enemy":
+                    cl.GetComponent<EnemyController>().GetHit(1);
+                    break;
             }
         }
     }
@@ -158,6 +164,33 @@ public class PlayerController : MonoBehaviour
             grounded = false;
             animator.SetBool("Jumping", true);
         }
+    }
+
+    public void GetHit(int damage)
+    {
+        animator.SetTrigger("Hit");
+        GameManager.Instance.PlayerHit(damage);
+        HitForce();
+    }
+
+    public void HitForce()
+    {
+        rigidbody.velocity = Vector2.zero;        
+        if (playerIsFacingRight)
+        {
+            rigidbody.AddForce(Vector2.left * hitForce, ForceMode2D.Impulse);
+        }
+        else
+        {
+            rigidbody.AddForce(Vector2.right * hitForce, ForceMode2D.Impulse);
+        }
+    }
+
+    public void Death()
+    {
+        animator.SetTrigger("Death");
+        rigidbody.isKinematic = true;
+
     }
 
 

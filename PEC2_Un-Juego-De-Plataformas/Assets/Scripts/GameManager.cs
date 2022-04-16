@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,11 +11,16 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI coinsText;
     public TextMeshProUGUI rubiesText;
     public GameObject[] health;
+    public GameObject player;
+    public Sprite fullHearth;
+    public Sprite emptyHeart;
+    public Canvas pauseCanvas;
+    public Canvas confirmCanvas;
 
-    private int coinsCollected = 0;
-    private int currentPlayerHealth = 1;
-    private int maxPlayerHealth = 4;
-    private int rubiesCollected = 0;
+
+    private GameInfo gameInfo;
+    private bool isGamePaused = false;
+    private bool isGameOnConfirmedPage = false;
     private static GameManager gmInstance;
 
     public static GameManager Instance { get { return gmInstance; } }
@@ -33,16 +39,76 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        gameInfo = FileManager.LoadGameInfo();
+        UpdateHealthUI();
+    }
+
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isGamePaused)
+            {
+                if (isGameOnConfirmedPage)
+                {
+                    ExitConfirmMenu();
+                }
+                else
+                {
+                    ResumeGame();
+                }
+            }
+            else
+            {
+                PauseGame();
+            }
+        }       
     }
+
+    public void PauseGame()
+    {
+        pauseCanvas.gameObject.SetActive(true);
+        isGamePaused = true;
+        Time.timeScale = 0f;
+    }
+
+    public void ResumeGame()
+    {
+        pauseCanvas.gameObject.SetActive(false);
+        isGamePaused = false;
+        Time.timeScale = 1f;
+    }
+
+    public void ConfirmExitMenu()
+    {
+        pauseCanvas.gameObject.SetActive(false);
+        confirmCanvas.gameObject.SetActive(true);
+        isGameOnConfirmedPage = true;
+    }
+
+    public void ExitConfirmMenu()
+    {
+        isGameOnConfirmedPage = false;
+        confirmCanvas.gameObject.SetActive(false);
+        pauseCanvas.gameObject.SetActive(true);
+    }
+
+
+    public void ExitGame()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+
 
     public void PickUpCoin(int coinValue)
     {
-        coinsCollected += coinValue;
-        coinsText.SetText(coinsCollected.ToString());
+
+        gameInfo.coins += coinValue;
+        coinsText.SetText(gameInfo.coins.ToString());
         var animatorState = collectibles.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
         if (animatorState.IsName("HideCollectibles") && animatorState.normalizedTime >= 1.0f)
         {
@@ -52,14 +118,14 @@ public class GameManager : MonoBehaviour
 
     public void PickUpPotion()
     {
-        currentPlayerHealth = maxPlayerHealth;
+        gameInfo.playerhealth = gameInfo.playerMaxhealth;
         UpdateHealthUI();
     }
 
     public void PickUpRuby(int rubyValue)
     {
-        rubiesCollected += rubyValue;
-        rubiesText.SetText(rubiesCollected.ToString());
+        gameInfo.rubies += rubyValue;
+        rubiesText.SetText(gameInfo.rubies.ToString());
         var animatorState = collectibles.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
         if (animatorState.IsName("HideCollectibles") && animatorState.normalizedTime >= 1.0f)
         {
@@ -69,11 +135,42 @@ public class GameManager : MonoBehaviour
 
     private void UpdateHealthUI()
     {
-        for(int i = 0; i < currentPlayerHealth; i++)
+        for(int i = 0; i < gameInfo.playerMaxhealth; i++)
         {
-
+            if(i < gameInfo.playerhealth)
+            {
+                health[i].GetComponent<SpriteRenderer>().sprite = fullHearth;
+            }
+            else
+            {
+                health[i].GetComponent<SpriteRenderer>().sprite = emptyHeart;
+            }
+            
         }
     }
 
+    public void PlayerHit(int damage)
+    {
+        gameInfo.playerhealth -= damage;
+        UpdateHealthUI();
+        if(gameInfo.playerhealth <= 0)
+        {
+            EndGame();
+        }
+    }
+
+    public void EndGame()
+    {
+        player.GetComponent<PlayerController>().Death();
+        FileManager.SaveData(gameInfo);
+        SceneManager.LoadScene("EndGame");
+    }
+
+    public void LevelCompleted()
+    {
+        gameInfo.currentLevel++;       
+        FileManager.SaveData(gameInfo);
+        SceneManager.LoadScene(gameInfo.currentLevel);
+    }
   
 }
