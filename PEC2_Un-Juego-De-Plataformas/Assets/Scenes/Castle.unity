@@ -2490,11 +2490,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1603820650746563928, guid: 451f6164a68a42d4a92c983e67c9bde0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 56.37
+      value: -8.05
       objectReference: {fileID: 0}
     - target: {fileID: 1603820650746563928, guid: 451f6164a68a42d4a92c983e67c9bde0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 15.83
+      value: -4.62
       objectReference: {fileID: 0}
     - target: {fileID: 1603820650746563928, guid: 451f6164a68a42d4a92c983e67c9bde0, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2531,6 +2531,10 @@ PrefabInstance:
     - target: {fileID: 1603820650746563929, guid: 451f6164a68a42d4a92c983e67c9bde0, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 1603820650746563933, guid: 451f6164a68a42d4a92c983e67c9bde0, type: 3}
+      propertyPath: dashSpeed
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 1603820650746563933, guid: 451f6164a68a42d4a92c983e67c9bde0, type: 3}
       propertyPath: jumpForce

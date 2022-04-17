@@ -10879,6 +10879,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 2d097c9ee99268049a6b3919cb39d409, type: 3}
     - target: {fileID: 1603820650746563933, guid: 451f6164a68a42d4a92c983e67c9bde0, type: 3}
+      propertyPath: dashSpeed
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 1603820650746563933, guid: 451f6164a68a42d4a92c983e67c9bde0, type: 3}
       propertyPath: attackClip
       value: 
       objectReference: {fileID: 8300000, guid: 90603ce560e57404aae6ec31c08d9906, type: 3}
