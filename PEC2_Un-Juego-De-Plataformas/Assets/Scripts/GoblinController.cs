@@ -2,23 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FlyingEyeController : EnemyController
-{   
-    public FlyingEyeController()
+public class GoblinController : EnemyController
+{
+    
+    public SpriteRenderer healthSprite;
+    public Sprite[] healtBars;
+    private float jumpForce = 3f;
+
+    public GoblinController()
     {
-        healtPoints = 3;
-        attackRange = 5f;
+        healtPoints = 5;
+        attackRange = 50f;
         damage = 1;
         playerRange = 10f;
-        movement = 1.5f;
-        attackSpeed = 2f;
+        movement = 3.5f;
+        attackSpeed = 0.5f;        
     }
 
     protected override void Attack()
     {
+
         float distance = Mathf.Abs(playerPosition.position.x - attackZone.transform.position.x);
         if (distance <= attackRange)
         {
+            rigidbody2D.velocity = Vector2.zero;
             if (attackTime == 0f)
             {
                 isAttacking = true;
@@ -58,7 +65,33 @@ public class FlyingEyeController : EnemyController
             var dir = (test - transform.position).normalized * movement;
             rigidbody2D.velocity = dir;
             animator.SetBool("Moving", true);
-        }        
+        }
+        else
+        {
+            animator.SetBool("Moving", false);
+        }
+    }
+
+    public override void GetHit(int damage)
+    {        
+        if(healtPoints - damage <= 0)
+        {
+            GameManager.Instance.LevelCompleted();
+        }
+        base.GetHit(damage);
+        healthSprite.sprite = healtBars[healtPoints];
+    }    
+
+    private void Jump()
+    {
+        if (enemyIsFacingRight)
+        {
+            rigidbody2D.AddForce(Vector2.left * jumpForce, ForceMode2D.Impulse);
+        }
+        else
+        {
+            rigidbody2D.AddForce(Vector2.right * jumpForce, ForceMode2D.Impulse);
+        }
     }
 
 }

@@ -8,9 +8,9 @@ public class EnemyController : MonoBehaviour
     protected int healtPoints = 4;
     protected int damage = 1;
     protected Animator animator;
-    private Collider2D[] colliders2D;
+    protected Collider2D[] colliders2D;
     protected AudioSource audioSource;
-    private float hitForce = 5f;
+    protected float hitForce = 5f;
     protected new Rigidbody2D rigidbody2D;
     protected bool enemyIsFacingRight = true;
     protected float movement = 0;
@@ -18,6 +18,8 @@ public class EnemyController : MonoBehaviour
     protected float attackSpeed = 2f;
     protected bool isAttacking = false;
     protected float attackTime = 0f;
+
+
     public Transform attackZone;
     public float attackRange = 5.0f;
     public float playerRange = 20f;
@@ -45,7 +47,7 @@ public class EnemyController : MonoBehaviour
         }        
     }
 
-    public void GetHit(int damage)
+    public virtual void GetHit(int damage)
     {
         animator.SetTrigger("Hit");
         StartCoroutine(WaitHit());

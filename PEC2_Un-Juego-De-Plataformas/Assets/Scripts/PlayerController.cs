@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     LayerMask floorMask;
     public float attackVelocity = 2f;
     public float hitForce = 15.0f;
+    public float dashSpeed = 35f;
     public AudioClip movementClip;
     public AudioClip attackClip;
     public AudioClip hitClip;
@@ -28,15 +29,10 @@ public class PlayerController : MonoBehaviour
     private bool grounded = true;
     private new Rigidbody2D rigidbody;
     private Animator animator;
-    private bool playerIsFacingRight = true;
+    private bool playerIsFacingRight = true;    
     private float nextAttackTime = 0f;
-    private float moveTime = 0f;
     private Vector3 lastGroundedPosition;
 
-    // Start is called before the first frame update
-    void Start()
-    {       
-    }
 
     private void Awake()
     {
@@ -71,10 +67,8 @@ public class PlayerController : MonoBehaviour
         CheckMovement();
         
         if(Input.GetMouseButtonDown(1) && grounded)
-        {
-            // Roll
-            animator.SetTrigger("Dash");
-            // add facing dash movement
+        {            
+            Dash();
         }
 
         if(Time.time >= nextAttackTime)
@@ -113,7 +107,6 @@ public class PlayerController : MonoBehaviour
         animator.SetTrigger("Attack");
         audioSource.clip = attackClip;
         audioSource.Play();
-        audioSource.loop = false;
         Collider2D[] hitObjects = Physics2D.OverlapCircleAll(attackZone.position, attackRange, attackLayer);
         foreach (Collider2D cl in hitObjects)
         {
@@ -169,13 +162,23 @@ public class PlayerController : MonoBehaviour
 
         if (hit == true)
         {
+            float xOffset;
+
             grounded = true;
+            if (playerIsFacingRight)
+            {
+                xOffset = -2f;
+            }
+            else
+            {
+                xOffset = +2f;
+            }
+            lastGroundedPosition = transform.position + new Vector3(xOffset, 0, 0);
             animator.SetBool("Jumping", false);
         }
         else
         {
             grounded = false;
-            lastGroundedPosition = transform.position;
             animator.SetBool("Jumping", true);
         }
     }
@@ -185,7 +188,6 @@ public class PlayerController : MonoBehaviour
         animator.SetTrigger("Hit");
         audioSource.clip = hitClip;
         audioSource.Play();
-        audioSource.loop = false;
         GameManager.Instance.PlayerHit(damage);
         HitForce();
     }
@@ -210,9 +212,29 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    private void Dash()
+    {
+        // Dash
+        animator.SetTrigger("Dash");
+        // TODO add facing dash movement
+        rigidbody.velocity = Vector2.zero;
+        if (playerIsFacingRight)
+        {
+            rigidbody.AddForce(Vector2.right * dashSpeed, ForceMode2D.Impulse);
+        }
+        else
+        {
+            rigidbody.AddForce(Vector2.left * dashSpeed, ForceMode2D.Impulse);
+        }
+    }
+
     public void FallIntoSpikes()
     {
         GameManager.Instance.PlayerHit(1);
+        audioSource.clip = hitClip;
+        audioSource.Play();
+        animator.SetTrigger("Hit");
+        rigidbody.velocity = Vector2.zero;
         transform.position = lastGroundedPosition;
         rigidbody.velocity = Vector2.zero;
     }

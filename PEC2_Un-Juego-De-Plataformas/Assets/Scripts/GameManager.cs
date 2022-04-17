@@ -99,6 +99,7 @@ public class GameManager : MonoBehaviour
 
     public void ExitGame()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -155,14 +156,14 @@ public class GameManager : MonoBehaviour
         UpdateHealthUI();
         if(gameInfo.playerhealth <= 0)
         {
+            FileManager.SaveData(gameInfo);
             EndGame();
         }
     }
 
     public void EndGame()
     {
-        player.GetComponent<PlayerController>().Death();
-        FileManager.SaveData(gameInfo);
+        player.GetComponent<PlayerController>().Death();        
         SceneManager.LoadScene("EndGame");
     }
 

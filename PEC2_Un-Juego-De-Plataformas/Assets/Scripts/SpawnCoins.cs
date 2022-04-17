@@ -26,7 +26,6 @@ public class SpawnCoins : MonoBehaviour
         gameObject.GetComponent<Animator>().SetTrigger("OpenChest");
         for (int i = 0; i < Random.Range(minSpawnRange, maxSpawnRange); i++)
         {
-            // TODO Play spawn sound
             GameObject coin = Instantiate(coinPrefab, transform);
             var xForce = Random.Range(5f, 7f);
             var yForce = Random.Range(5f, 7f);

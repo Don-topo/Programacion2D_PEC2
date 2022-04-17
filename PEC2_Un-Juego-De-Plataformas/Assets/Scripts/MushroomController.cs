@@ -32,6 +32,10 @@ public class MushroomController : EnemyController
             rigidbody2D.velocity = dir;
             animator.SetBool("Moving", true);
         }
+        else
+        {
+            animator.SetBool("Moving", false);
+        }
     }
 
     protected override void Attack(){ }

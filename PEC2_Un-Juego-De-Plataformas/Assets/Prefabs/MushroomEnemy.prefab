@@ -121,11 +121,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackZone: {fileID: 0}
   attackRange: 5
-  playerRange: 20
+  playerRange: 5
   attackLayer:
     serializedVersion: 2
     m_Bits: 256
   playerPosition: {fileID: 0}
+  hitClip: {fileID: 0}
+  attackClip: {fileID: 0}
 --- !u!50 &973000589
 Rigidbody2D:
   serializedVersion: 4
