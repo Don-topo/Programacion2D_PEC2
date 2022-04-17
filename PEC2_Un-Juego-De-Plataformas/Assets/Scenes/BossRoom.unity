@@ -4070,7 +4070,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1150849253620022423, guid: f6d36eed5cfc0a045a0ccd51ba441ed4, type: 3}
       propertyPath: m_FlipX
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1150849253620022423, guid: f6d36eed5cfc0a045a0ccd51ba441ed4, type: 3}
       propertyPath: m_SortingOrder

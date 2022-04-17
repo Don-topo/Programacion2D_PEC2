@@ -46,6 +46,8 @@ Desde el interior del bosque esta empezando a resurgir el mal. Los exploradores 
 Dentro de este grupo se encuentra la protagonista, una gerrera experimentada.
 En el interior del bosque el grupo sufre una emboscada y todos los miembros del grupo mueren, salvo nuestra protagonista que acaba gravemente herida. Ella sola tendrá que poner fin a este mal.
 
+[Video con la demo](videos/VideoDemostracion.mp4)
+
 # 2. Pantallas
 
 ## 2.1. Pantalla de Título

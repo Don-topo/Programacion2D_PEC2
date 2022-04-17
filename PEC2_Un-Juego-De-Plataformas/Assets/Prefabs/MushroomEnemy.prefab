@@ -121,7 +121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackZone: {fileID: 0}
   attackRange: 5
-  playerRange: 5
+  playerRange: 10
   attackLayer:
     serializedVersion: 2
     m_Bits: 256
