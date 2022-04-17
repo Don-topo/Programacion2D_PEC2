@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class MushroomController : EnemyController
 {    
-
+    
     public MushroomController()
     {
         movement = 1f;
+        healtPoints = 2;
+        damage = 1;
+        playerRange = 20f;
     }
+
     protected override void Move()
     {
         float distance = Mathf.Abs(transform.position.x - playerPosition.transform.position.x);
@@ -23,12 +27,12 @@ public class MushroomController : EnemyController
             {
                 Flip();
             }            
-//            var dir = (playerPosition.position - transform.position).normalized * movementSpeed;
             var test = new Vector3(playerPosition.position.x, transform.position.y, transform.position.z);
             var dir = (test - transform.position).normalized * movement;
             rigidbody2D.velocity = dir;
-
+            animator.SetBool("Moving", true);
         }
     }
-        
+
+    protected override void Attack(){ }
 }

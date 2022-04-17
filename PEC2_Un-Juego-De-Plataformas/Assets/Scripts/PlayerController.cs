@@ -16,15 +16,22 @@ public class PlayerController : MonoBehaviour
     LayerMask floorMask;
     public float attackVelocity = 2f;
     public float hitForce = 15.0f;
+    public AudioClip movementClip;
+    public AudioClip attackClip;
+    public AudioClip hitClip;
+    public AudioClip groundedClip;
 
 
+    private AudioSource audioSource;
     private float movement = 0.0f;
+    private int playerDamage = 1;
     private bool grounded = true;
     private new Rigidbody2D rigidbody;
     private Animator animator;
     private bool playerIsFacingRight = true;
     private float nextAttackTime = 0f;
     private float moveTime = 0f;
+    private Vector3 lastGroundedPosition;
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +41,8 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         rigidbody = gameObject.GetComponent<Rigidbody2D>();
-        animator = gameObject.GetComponent<Animator>();      
+        animator = gameObject.GetComponent<Animator>();
+        audioSource = gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -103,6 +111,9 @@ public class PlayerController : MonoBehaviour
     private void Attack()
     {
         animator.SetTrigger("Attack");
+        audioSource.clip = attackClip;
+        audioSource.Play();
+        audioSource.loop = false;
         Collider2D[] hitObjects = Physics2D.OverlapCircleAll(attackZone.position, attackRange, attackLayer);
         foreach (Collider2D cl in hitObjects)
         {
@@ -112,7 +123,9 @@ public class PlayerController : MonoBehaviour
                     cl.GetComponent<BoxController>().PlayerInteract();
                     break;
                 case "Enemy":
-                    cl.GetComponent<EnemyController>().GetHit(1);
+                    if (cl.isTrigger) {
+                        cl.GetComponent<EnemyController>().GetHit(playerDamage);
+                    }                                                            
                     break;
             }
         }
@@ -142,7 +155,7 @@ public class PlayerController : MonoBehaviour
     {
         if (movement != 0)
         {
-            animator.SetBool("Moving", true);
+            animator.SetBool("Moving", true);          
         }
         else
         {
@@ -162,6 +175,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             grounded = false;
+            lastGroundedPosition = transform.position;
             animator.SetBool("Jumping", true);
         }
     }
@@ -169,6 +183,9 @@ public class PlayerController : MonoBehaviour
     public void GetHit(int damage)
     {
         animator.SetTrigger("Hit");
+        audioSource.clip = hitClip;
+        audioSource.Play();
+        audioSource.loop = false;
         GameManager.Instance.PlayerHit(damage);
         HitForce();
     }
@@ -191,6 +208,13 @@ public class PlayerController : MonoBehaviour
         animator.SetTrigger("Death");
         rigidbody.isKinematic = true;
 
+    }
+
+    public void FallIntoSpikes()
+    {
+        GameManager.Instance.PlayerHit(1);
+        transform.position = lastGroundedPosition;
+        rigidbody.velocity = Vector2.zero;
     }
 
 

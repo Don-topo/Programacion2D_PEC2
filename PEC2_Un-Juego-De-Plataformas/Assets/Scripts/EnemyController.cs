@@ -5,20 +5,26 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
 
-    protected int healtPoints = 2;
+    protected int healtPoints = 4;
     protected int damage = 1;
-    private Animator animator;
+    protected Animator animator;
     private Collider2D[] colliders2D;
-    private AudioSource audioSource;
+    protected AudioSource audioSource;
+    private float hitForce = 5f;
     protected new Rigidbody2D rigidbody2D;
     protected bool enemyIsFacingRight = true;
     protected float movement = 0;
     protected bool canMove = true;
+    protected float attackSpeed = 2f;
+    protected bool isAttacking = false;
+    protected float attackTime = 0f;
     public Transform attackZone;
     public float attackRange = 5.0f;
     public float playerRange = 20f;
     public LayerMask attackLayer;
     public Transform playerPosition;
+    public AudioClip hitClip;
+    public AudioClip attackClip;
 
     // Start is called before the first frame update
     void Awake()
@@ -32,27 +38,41 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(healtPoints > 0)
+        if(healtPoints > 0 && canMove)
         {
             Move();
+            Attack();
         }        
     }
 
     public void GetHit(int damage)
     {
         animator.SetTrigger("Hit");
-        canMove = false;
         StartCoroutine(WaitHit());
         healtPoints -= damage;
+        audioSource.clip = hitClip;
+        audioSource.Play();
         if(healtPoints <= 0)
         {
             Death();
+        }
+        else
+        {
+            if (enemyIsFacingRight)
+            {
+                rigidbody2D.AddForce(Vector2.left * hitForce, ForceMode2D.Impulse);
+            }
+            else
+            {
+                rigidbody2D.AddForce(Vector2.right * hitForce, ForceMode2D.Impulse);
+            }
         }
     }
 
     protected void Death()
     {
         animator.SetTrigger("Death");
+        rigidbody2D.velocity = Vector2.zero;
         rigidbody2D.isKinematic = true;
         foreach(Collider2D cl in colliders2D)
         {
@@ -65,6 +85,8 @@ public class EnemyController : MonoBehaviour
     protected virtual void Attack()
     {
         animator.SetTrigger("Attack");
+        audioSource.clip = attackClip;
+        audioSource.Play();
         Collider2D[] hitObjects = Physics2D.OverlapCircleAll(attackZone.position, attackRange, attackLayer);
         foreach (Collider2D cl in hitObjects)
         {
@@ -100,10 +122,11 @@ public class EnemyController : MonoBehaviour
         transform.localScale = theScale;
     }
 
-    IEnumerator WaitHit()
+    protected IEnumerator WaitHit()
     {
+        canMove = false;
+        yield return new WaitForSeconds(1.5f);
         canMove = true;
-        yield return new WaitForSeconds(1f);
-    } 
+    }  
 
 }
